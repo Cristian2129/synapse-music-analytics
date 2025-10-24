@@ -1,0 +1,17 @@
+{
+	"name": "02_create_parquet_file_format",
+	"properties": {
+		"content": {
+			"query": "-- ==========================================\n-- Script 02: Crear formato de archivo Parquet\n-- ==========================================\n\nIF EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'ParquetFileFormat')\n    DROP EXTERNAL FILE FORMAT ParquetFileFormat;\nGO\n\nCREATE EXTERNAL FILE FORMAT ParquetFileFormat\nWITH (\n    FORMAT_TYPE = PARQUET\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "rawmusicdb",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

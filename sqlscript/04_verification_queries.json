@@ -1,0 +1,17 @@
+{
+	"name": "04_verification_queries",
+	"properties": {
+		"content": {
+			"query": "-- ==========================================\n-- Verificación de la tabla externa creada\n-- ==========================================\n\n-- 1️ Verificar que la tabla existe\nSELECT \n    name,\n    location,\n    data_source_id,\n    file_format_id\nFROM \n    sys.external_tables\nWHERE \n    name = 'processed_music_data_final';\n\n-- 2️ Contar total de filas\nSELECT \n    COUNT(*) as total_filas\nFROM \n    processed_music_data_final;\n\n-- 3️ Ver primeras 10 filas\nSELECT TOP 10 \n    artist_name,\n    country,\n    track_name,\n    popularity,\n    danceability,\n    energy\nFROM \n    processed_music_data_final\nORDER BY \n    popularity DESC;\n\n-- 4️ Verificar artistas únicos\nSELECT \n    COUNT(DISTINCT artist_name) as artistas_unicos,\n    COUNT(DISTINCT track_id) as tracks_unicos,\n    COUNT(DISTINCT country) as paises_unicos\nFROM \n    processed_music_data_final;\n\n-- 5️ Top 10 artistas con más canciones\nSELECT TOP 10\n    artist_name,\n    country,\n    COUNT(*) as total_tracks,\n    AVG(popularity) as avg_popularity,\n    AVG(danceability) as avg_danceability\nFROM \n    processed_music_data_final\nGROUP BY \n    artist_name, country\nORDER BY \n    total_tracks DESC;\n\n-- 6️ Verificar valores nulos\nSELECT \n    COUNT(*) as total_filas,\n    SUM(CASE WHEN artist_name IS NULL THEN 1 ELSE 0 END) as nulls_artist_name,\n    SUM(CASE WHEN track_name IS NULL THEN 1 ELSE 0 END) as nulls_track_name,\n    SUM(CASE WHEN country IS NULL THEN 1 ELSE 0 END) as nulls_country,\n    SUM(CASE WHEN popularity IS NULL THEN 1 ELSE 0 END) as nulls_popularity\nFROM \n    processed_music_data_final;\n\n-- 7️ Top 10 canciones más populares\nSELECT TOP 10\n    artist_name,\n    track_name,\n    country,\n    popularity,\n    danceability,\n    energy,\n    valence\nFROM \n    processed_music_data_final\nORDER BY \n    popularity DESC;\n\n-- 8️ Estadísticas por país\nSELECT \n    country,\n    COUNT(DISTINCT artist_name) as total_artistas,\n    COUNT(*) as total_tracks,\n    AVG(popularity) as avg_popularity,\n    AVG(danceability) as avg_danceability,\n    AVG(energy) as avg_energy\nFROM \n    processed_music_data_final\nGROUP BY \n    country\nORDER BY \n    total_tracks DESC;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "rawmusicdb",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "01_create_external_data_source",
+	"properties": {
+		"content": {
+			"query": "-- ==========================================\n-- Script 01: Crear origen de datos externo\n-- Contenedor: artistsongs\n-- Cuenta de almacenamiento: musicrawdata\n-- ==========================================\n\nCREATE EXTERNAL DATA SOURCE rawmusic_storage\nWITH (\n    LOCATION = 'https://musicrawdata.dfs.core.windows.net/artistsongs'\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "rawmusicdb",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

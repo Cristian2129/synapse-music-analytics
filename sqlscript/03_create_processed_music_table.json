@@ -1,0 +1,17 @@
+{
+	"name": "03_create_processed_music_table",
+	"properties": {
+		"content": {
+			"query": "-- ==========================================\n-- Script 03: Transformación de datos de canciones\n-- Contenedor: artistsongs\n-- ==========================================\n\n\n\nCREATE EXTERNAL TABLE processed_music_data_final\nWITH (\n    LOCATION = 'processed_music_data_final/',\n    DATA_SOURCE = rawmusic_storage,\n    FILE_FORMAT = ParquetFileFormat\n)\nAS\nSELECT\n    -- Columnas de artistas\n    a.artist_name,\n    a.artist_genre,\n    a.artist_img,\n    a.artist_id,\n    a.country,\n    \n    -- Columnas de tracks\n    s.track_id,\n    s.track_name,\n    s.acousticness,\n    s.danceability,\n    s.duration_ms,\n    s.energy,\n    s.instrumentalness,\n    s.[key],\n    s.liveness,\n    s.loudness,\n    s.mode,\n    s.speechiness,\n    s.tempo,\n    s.time_signature,\n    s.valence,\n    s.popularity\nFROM\n    OPENROWSET(\n        BULK 'artist_data/Global_Music_Artists_clean.csv',\n        DATA_SOURCE = 'rawmusic_storage',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE,\n        FIELDTERMINATOR = ',',\n        ROWTERMINATOR = '\\n'\n    )\n    WITH (\n        artist_name VARCHAR(1000) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        artist_genre VARCHAR(1000) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        artist_img VARCHAR(1000) COLLATE Latin1_General_100_CI_AS_SC_UTF8, \n        artist_id VARCHAR(100) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        country VARCHAR(200) COLLATE Latin1_General_100_CI_AS_SC_UTF8\n    ) AS a\nINNER JOIN\n    OPENROWSET(\n        BULK 'songs_data/canciones.csv',\n        DATA_SOURCE = 'rawmusic_storage',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE,\n        FIELDTERMINATOR = ',',\n        ROWTERMINATOR = '\\n'\n    )\n    WITH (\n        artist_name VARCHAR(1000) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        track_id VARCHAR(100) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        track_name VARCHAR(1000) COLLATE Latin1_General_100_CI_AS_SC_UTF8,  \n        acousticness FLOAT,\n        danceability FLOAT,\n        duration_ms INT,\n        energy FLOAT,\n        instrumentalness FLOAT,\n        [key] INT,\n        liveness FLOAT,\n        loudness FLOAT,\n        mode INT,\n        speechiness FLOAT,\n        tempo FLOAT,\n        time_signature INT,\n        valence FLOAT,\n        popularity INT\n    ) AS s\nON LOWER(TRIM(a.artist_name)) = LOWER(TRIM(s.artist_name));",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "rawmusicdb",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
